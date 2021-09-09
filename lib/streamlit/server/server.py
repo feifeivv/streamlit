@@ -396,9 +396,14 @@ class Server:
             routes.extend(
                 [
                     (
+                        make_url_path_regex(base, ".*_app.py/?(.*)?"),
+                        StaticFileHandler,
+                        {"path": f"{static_path}/", "default_filename": "index.html"},
+                    ),
+                    (
                         make_url_path_regex(base, "(.*)"),
                         StaticFileHandler,
-                        {"path": "%s/" % static_path, "default_filename": "index.html"},
+                        {"path": f"{static_path}/", "default_filename": "index.html"},
                     ),
                     (make_url_path_regex(base, trailing_slash=False), AddSlashHandler),
                 ]
