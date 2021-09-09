@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 
 def open_python_file(filename):
     """Open a read-only Python file taking proper care of its encoding.
@@ -29,3 +31,22 @@ def open_python_file(filename):
         return tokenize.open(filename)
     else:
         return open(filename, "r", encoding="utf-8")
+
+
+STREAMLIT_APP_SUFFIX = "_app.py"
+
+
+def find_files_with_suffix(starting_dir, suffix):
+    # NOTE: We'll want to do some sort of verification on starting_dir (does it
+    # actually exist / is it actually a directory) in the hardened version of
+    # this feature, but the best place to do so may not be within this
+    # function.
+
+    matching_files = []
+
+    for root, _, filenames in os.walk(starting_dir):
+        for name in filenames:
+            if name.endswith(suffix):
+                matching_files.append(os.path.join(root, name))
+
+    return matching_files
