@@ -111,6 +111,8 @@ export function xssSanitizeSvg(uri: string): string {
  * construct it appropriately.  Otherwise leave it alone.
  */
 export function buildMediaUri(uri: string): string {
+  // TODO(vdonato): Use the URL that the ConnectionManager actually ends up
+  // connecting to here instead of getWindowBaseUriParts().
   return uri.startsWith("/media")
     ? buildHttpUri(getWindowBaseUriParts(), uri)
     : uri

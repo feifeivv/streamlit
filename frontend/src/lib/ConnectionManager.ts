@@ -153,9 +153,25 @@ export class ConnectionManager {
 
   private connectToRunningServer(): WebsocketConnection {
     const baseUriParts = getWindowBaseUriParts()
+    const { basePath } = baseUriParts
+
+    const baseUriPartsList: BaseUriParts[] = []
+    if (basePath) {
+      const pathParts = basePath.split("/")
+      let currPath = ""
+
+      pathParts.forEach(part => {
+        baseUriPartsList.push({
+          ...baseUriParts,
+          basePath: currPath,
+        })
+        currPath += `${part}/`
+      })
+    }
+    baseUriPartsList.push(baseUriParts)
 
     return new WebsocketConnection({
-      baseUriPartsList: [baseUriParts],
+      baseUriPartsList,
       onMessage: this.props.onMessage,
       onConnectionStateChange: this.setConnectionState,
       onRetry: this.showRetryError,
