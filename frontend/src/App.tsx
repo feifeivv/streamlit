@@ -932,9 +932,17 @@ export class App extends PureComponent<Props, State> {
       queryString = queryString.substring(1)
     }
 
+    let scriptPath = ""
+    const baseUriParts =
+      this.connectionManager && this.connectionManager.getBaseUriParts()
+    if (baseUriParts) {
+      const { basePath } = baseUriParts
+      scriptPath = window.location.pathname.replace(`/${basePath}`, "")
+    }
+
     this.sendBackMsg(
       new BackMsg({
-        rerunScript: { queryString, widgetStates },
+        rerunScript: { queryString, widgetStates, scriptPath },
       })
     )
   }
