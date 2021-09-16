@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import gc
+import os
 import sys
 import threading
-import gc
 from contextlib import contextmanager
 from enum import Enum
 
@@ -279,16 +280,25 @@ class ScriptRunner(object):
         # in their previous report disappearing.
 
         try:
-            with source_util.open_python_file(self._report.script_path) as f:
+            script_path = (
+                rerun_data.script_path
+                if os.path.isdir(self._report.script_path)
+                else self._report.script_path
+            )
+
+            if not script_path:
+                return
+
+            with source_util.open_python_file(script_path) as f:
                 filebody = f.read()
 
             if config.get_option("runner.magicEnabled"):
-                filebody = magic.add_magic(filebody, self._report.script_path)
+                filebody = magic.add_magic(filebody, script_path)
 
             code = compile(
                 filebody,
                 # Pass in the file path so it can show up in exceptions.
-                self._report.script_path,
+                script_path,
                 # We're compiling entire blocks of Python, so we need "exec"
                 # mode (as opposed to "eval" or "single").
                 mode="exec",

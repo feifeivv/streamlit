@@ -622,7 +622,8 @@ Please report this bug at https://github.com/streamlit/streamlit/issues.
         browser connects.
         """
         session = self._create_or_reuse_report_session(ws=None)
-        session.handle_rerun_script_request(is_preheat=True)
+        if os.path.isfile(self._script_path):
+            session.handle_rerun_script_request(is_preheat=True)
 
     def _create_or_reuse_report_session(
         self, ws: Optional[WebSocketHandler]

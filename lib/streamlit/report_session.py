@@ -228,7 +228,9 @@ class ReportSession(object):
         """
         if client_state:
             rerun_data = RerunData(
-                client_state.query_string, client_state.widget_states
+                client_state.query_string,
+                client_state.widget_states,
+                client_state.script_path,
             )
         else:
             rerun_data = RerunData()

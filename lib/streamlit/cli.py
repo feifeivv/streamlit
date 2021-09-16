@@ -160,7 +160,7 @@ def main_run(target, args=None, **kwargs):
     bootstrap.load_config_options(flag_options=kwargs)
 
     _, extension = os.path.splitext(target)
-    if extension[1:] not in ACCEPTED_FILE_EXTENSIONS:
+    if not os.path.isdir(target) and extension[1:] not in ACCEPTED_FILE_EXTENSIONS:
         if extension[1:] == "":
             raise click.BadArgumentUsage(
                 "Streamlit requires raw Python (.py) files, but the provided file has no extension.\nFor more information, please see https://docs.streamlit.io"

@@ -34,9 +34,10 @@ class ScriptRequest(Enum):
 class RerunData(object):
     """Data attached to RERUN requests."""
 
-    def __init__(self, query_string="", widget_states=None):
+    def __init__(self, query_string="", widget_states=None, script_path=""):
         self.query_string = query_string
         self.widget_states = widget_states
+        self.script_path = script_path
 
     def __repr__(self) -> str:
         return util.repr_(self)
@@ -96,6 +97,7 @@ class ScriptRequestQueue(object):
                             RerunData(
                                 query_string=data.query_string,
                                 widget_states=data.widget_states,
+                                script_path=data.script_path,
                             ),
                         )
                     elif data.widget_states is None:
@@ -116,6 +118,7 @@ class ScriptRequestQueue(object):
                             RerunData(
                                 query_string=data.query_string,
                                 widget_states=coalesced_states,
+                                script_path=data.script_path,
                             ),
                         )
                 else:
