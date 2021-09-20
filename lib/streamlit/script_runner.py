@@ -280,14 +280,20 @@ class ScriptRunner(object):
         # in their previous report disappearing.
 
         try:
-            script_path = (
-                rerun_data.script_path
-                if os.path.isdir(self._report.script_path)
-                else self._report.script_path
-            )
-
-            if not script_path:
-                return
+            if os.path.isdir(self._report.script_path):
+                module_root_path = os.path.dirname(os.path.realpath(__file__))
+                if not rerun_data.script_path:
+                    script_path = os.path.join(module_root_path, "pages", "index.py")
+                elif not os.path.isfile(
+                    rerun_data.script_path
+                ) or not rerun_data.script_path.endswith("_app.py"):
+                    script_path = os.path.join(
+                        module_root_path, "pages", "not_found.py"
+                    )
+                else:
+                    script_path = rerun_data.script_path
+            else:
+                script_path = self._report.script_path
 
             with source_util.open_python_file(script_path) as f:
                 filebody = f.read()
